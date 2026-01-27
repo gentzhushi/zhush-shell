@@ -1,2 +1,7 @@
 # zhush-shell
-Zhush - just another shell recreactional programming project
+Zh.u.sh. - just another shell recreactional programming project.
+
+it stands for 
+ZH - ZHushi
+U - Unix
+SH - SHell
