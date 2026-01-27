@@ -1,8 +1,10 @@
 #include<stdio.h>
 
 int main(int argc, char** argv){
-        
-        printf("hello");
+       
+        for (int i = 0; i < argc; i++){
+                printf("argumenti %d: %s\n", i, *(argv+i));
+        }
 
         return 0;
 }
