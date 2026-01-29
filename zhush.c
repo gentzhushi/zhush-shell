@@ -53,23 +53,18 @@ int evaluate(char *line){
 }
 
 char** tokenize(char* line){
-	printf("tokenize 1\n");
 	size_t bufsize = BUFSIZE;
 	char **tokens = Malloc(bufsize * sizeof(char*));
 	int i = 0;
 	
-	printf("tokenize 2\n");
 	for (char *token = strtok(line, SPACE); token; 
 			token = strtok(NULL, SPACE))
 	{
-		printf("tokenize 3: token=%s\n", token);
 		tokens[i++] = token;
 	}
 
-	printf("tokenize 4\n");
 	tokens[i] = NULL;
 
-	printf("tokenize 5\n");
 	return tokens;
 }
 
