@@ -55,3 +55,6 @@ dkms.conf
 # Per vim
 *~
 *.swp
+
+# To do list
+TODO.md
