@@ -10,12 +10,12 @@ int main(int argc, char** argv){
         char user_input[BUFSIZ];
 
         while(1){
-		printf("zhush$>");
+		printf(CYAN"zhush$> "RST);
 		fflush(stdout);
 		// readline
                 scanf(" %255[^\n]", user_input);
                 printf("Duke evaluu: %s\n\n", user_input);
-                evaluate(user_input);
+		evaluate(user_input);
         }
 
         return 0;
@@ -25,16 +25,18 @@ int evaluate(char *line){
         pid_t child_pid = fork();
 
         if (child_pid == 0){
-                printf(YELLOW"---CHILD-PROCESS---\n");
+                printf("---CHILD-PROCESS---\n");
 		printf("PID:%d,\t CHILD_PID:%d\n\n", getpid(), child_pid);
-                printf("Arguments: %s\n", line);
         	
-                //char **args = {"ls", "-lha", "--color=always", NULL};
-		char **argv;
-		int argc;
+		char **argv = tokenize(line);
+		
+		//printoj args-at
+		printf("Tu provu me ekzekutu: { ");
+		for(int i = 0; argv[i] != NULL; i++){
+			printf("%s, ", argv[i]);
+		}
+		printf("}\n\n");
 
-		tokenize(line, argv, &argc);
-		printf("Tu provu me ekzekutu [ls -lha]\n");
                 execvp(argv[0], argv);
 
                 _exit(0); // qikjo s'ka mu ekzekutu kurr
@@ -42,41 +44,37 @@ int evaluate(char *line){
         else {
                 int child_status;
                 waitpid(child_pid, &child_status, 0);
-                printf(BLUE"---PARENT-PROCESS---\n");
-		printf("PID:%d,\t CHILD_PID:%d"RST"\n\n", getpid(), child_pid);
+                printf("\n\n---PARENT-PROCESS---\n");
+		printf("PID:%d,\t CHILD_PID:%d\t CHILD_STATUS: %d\n\n", 
+				getpid(), child_pid, child_status);
         }
 
         return 0;
 }
 
-char** tokenize(char* line, char **argv, int *argc){
-        
-        int line_length;
-        for (line_length = 0; line[line_length] != '\0'; line_length++);
-        
-        char** parsed_line = NULL;
-        for (int i = 0, buff_ptr = 0; i < line_length; i++, buff_ptr++){
+char** tokenize(char* line){
+	printf("tokenize 1\n");
+	size_t bufsize = BUFSIZE;
+	char **tokens = Malloc(bufsize * sizeof(char*));
+	int i = 0;
+	
+	printf("tokenize 2\n");
+	for (char *token = strtok(line, SPACE); token; 
+			token = strtok(NULL, SPACE))
+	{
+		printf("tokenize 3: token=%s\n", token);
+		tokens[i++] = token;
+	}
 
-                char buff[BUFSIZ];
-                bool q_flag = false;
-                
-                if ((line[i] == ' ' && !q_flag) || (line[i] == '\"' && q_flag)){
-                        //add_word(parsed_line, buff);
-                        buff_ptr = 0;
-                } 
+	printf("tokenize 4\n");
+	tokens[i] = NULL;
 
-                if (line[i] == '\"'){
-                        q_flag = !q_flag;
-                }
-
-                buff[buff_ptr] = line[i];
-        }
-
-        return parsed_line;
+	printf("tokenize 5\n");
+	return tokens;
 }
 
 void zhstart(void){
-	printf(" ________  __    __  __    __   ______   __    __ \n");
+	printf(CYAN" ________  __    __  __    __   ______   __    __ \n");
 	printf("/        |/  |  /  |/  |  /  | /      \\ /  |  /  |\n");
 	printf("$$$$$$$$/ $$ |  $$ |$$ |  $$ |/$$$$$$  |$$ |  $$ |\n");
 	printf("    /$$/  $$ |__$$ |$$ |  $$ |$$ \\__$$/ $$ |__$$ |\n");
@@ -84,5 +82,19 @@ void zhstart(void){
 	printf("  /$$/    $$$$$$$$ |$$ |  $$ | $$$$$$  |$$$$$$$$ |\n");
 	printf(" /$$/____ $$ |  $$ |$$ \\__$$ |/  \\__$$ |$$ |  $$ |\n");
 	printf("/$$      |$$ |  $$ |$$    $$/ $$    $$/ $$ |  $$ |\n");
-	printf("$$$$$$$$/ $$/   $$/  $$$$$$/   $$$$$$/  $$/   $$/ \n\n\n");
+	printf("$$$$$$$$/ $$/   $$/  $$$$$$/   $$$$$$/  $$/   $$/ \n\n\n"RST);
+}
+
+void *Malloc(size_t size){
+
+	if (size == 0) return NULL;
+
+	void *memory = malloc(size);
+
+	if (!memory){
+		perror(RED"!!MALLOC FAILED!!"RST);
+		exit(EXIT_FAILURE);
+	}
+
+	return memory;
 }
