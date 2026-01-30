@@ -18,7 +18,7 @@ int echo_f(char** argv){
 
 	printf(GREEN"BUILT IN ECHO\n"RST);
 
-	for(int i = 0; argv[i] != NULL; i++)
+	for(int i = 1; argv[i] != NULL; i++)
 		printf("%s ", argv[i]);
 	printf("\n");
 
