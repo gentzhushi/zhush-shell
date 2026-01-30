@@ -1,7 +1,11 @@
 flags := -Wall -Wextra -Wpedantic -I include -std=c17
-object := zhush
+
+sources := zhush.c builtin.c util.c
+
+executable := zhush
 
 compile:
-	cc $(flags) zhush.c -o $(object)
+	cc $(flags) $(sources) -o $(executable)
 
-clean: rm -f $(object)
+clean: 
+	rm -f $(object)
